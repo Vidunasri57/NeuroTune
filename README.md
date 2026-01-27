@@ -12,9 +12,9 @@ This project aims to create a **non-invasive**, **affordable**, and **easy-to-us
 The device is powered by an **ESP32 microcontroller**, which acts as the main processor. It gathers live data from multiple sensors, analyzes it, and identifies stress patterns.  
 
 **Sensors used:**  
-- **MAX30102 / MAX30105** → Measures heart rate and oxygen levels  
-- **GSR Sensor** → Monitors skin conductance to estimate stress  
-- **MPU6050** → Tracks body movement and posture changes  
+- **MAX30102 / MAX30105** → Measures heart rate and oxygen levels    
+- **MPU6050** → Tracks body movement and posture changes
+- **LM35** → Measures Temperature of the body
 
 When the system detects abnormal readings, it sends signals to a **mobile app** via **Bluetooth**, which instantly triggers calming audio or alerts. Data can also be uploaded to the **cloud** for long-term analysis and insights.  
 
