@@ -65,7 +65,7 @@ NeuroTune is currently in the **prototype stage**. The basic system is functiona
 
 ### Tech Stack  
 - **Microcontroller:** ESP32  
-- **Sensors:** MAX30102 / MAX30105, GSR Sensor, MPU6050  
+- **Sensors:** MAX30102 / MAX30105, MPU6050  
 - **Communication:** Bluetooth, Wi-Fi  
 - **Software Tools:** Arduino IDE / PlatformIO  
 - **Cloud Platform:** ThingSpeak / Blynk  
