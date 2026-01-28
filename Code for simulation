@@ -1,0 +1,155 @@
+//Simulation Code
+
+#include <Arduino.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// Pin definitions
+const int PIN_PULSE = 34;   // Potentiometer 1 (Heart-rate simulation)
+const int PIN_MOTION = 35;  // Potentiometer 2 (Motion simulation)
+const int PIN_LED = 2;
+const int PIN_BUZZ = 15;
+
+// OLED configuration
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Variables for beat detection
+int threshold = 600;         
+bool wasAbove = false;
+unsigned long lastBeatTime = 0;
+float lastBPM = 0.0;
+float smoothBPM = 0.0;
+
+// Timing
+unsigned long lastPrint = 0;
+const unsigned long PRINT_INTERVAL = 800; // ms
+
+// Motion / artifact
+int motionThreshold = 2200;
+
+// Stress detection threshold
+int stressBPMThreshold = 95;
+int minValidInterval = 250;  
+int maxValidInterval = 2000; 
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println("🩺 NeuroTune Wokwi Simulation Starting...");
+
+  pinMode(PIN_LED, OUTPUT);
+  pinMode(PIN_BUZZ, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
+  digitalWrite(PIN_BUZZ, LOW);
+
+  // Initialize OLED
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println("OLED not found, continuing without display...");
+  } else {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(0, 0);
+    display.println("NeuroTune Simulation Ready");
+    display.display();
+  }
+}
+
+void loop() {
+  unsigned long now = millis();
+
+  // Read analog values
+  int rawPulse = analogRead(PIN_PULSE);   // heart signal
+  int rawMotion = analogRead(PIN_MOTION); // motion signal
+
+  // Simple peak detection
+  if (rawPulse > threshold && !wasAbove) {
+    unsigned long t = millis();
+    if (lastBeatTime != 0) {
+      unsigned long dt = t - lastBeatTime;
+      if (dt > minValidInterval && dt < maxValidInterval) {
+        float bpm = 60000.0 / (float)dt;
+        // Smooth sudden jumps
+        if (smoothBPM == 0) smoothBPM = bpm;
+        else smoothBPM = 0.25 * bpm + 0.75 * smoothBPM;
+        lastBPM = smoothBPM;
+      }
+    }
+    lastBeatTime = t;
+    wasAbove = true;
+  } else if (rawPulse < threshold) {
+    wasAbove = false;
+  }
+
+  // Motion detection
+  bool motionFlag = rawMotion > motionThreshold;
+  float reportedBPM = lastBPM;
+
+  if (motionFlag) {
+    reportedBPM = 0.0; // ignore BPM during heavy motion
+  }
+
+  // Stress detection
+  bool stressDetected = (!motionFlag && reportedBPM > stressBPMThreshold);
+
+  // LED + Buzzer indicators
+  if (stressDetected) {
+    digitalWrite(PIN_LED, HIGH);
+    digitalWrite(PIN_BUZZ, (now / 200) % 2); // beep pattern
+  } else {
+    digitalWrite(PIN_LED, LOW);
+    digitalWrite(PIN_BUZZ, LOW);
+  }
+
+  // Output every 0.8s
+  if (now - lastPrint >= PRINT_INTERVAL) {
+    lastPrint = now;
+
+    // JSON for app/Person B
+    String payload = "{\"hr\":" + String(reportedBPM, 1) +
+                     ",\"motion\":" + String(motionFlag ? 1 : 0) +
+                     ",\"stress\":" + String(stressDetected ? 1 : 0) + "}";
+    Serial.println(payload);
+
+    // Status log
+    if (motionFlag) {
+      Serial.println("Status: Motion artifact – reading paused");
+    } else if (reportedBPM == 0) {
+      Serial.println("Status: Waiting for stable beats");
+    } else if (stressDetected) {
+      Serial.println("Stress detected → Play calming audio\n");
+    } else {
+      Serial.println("Normal condition\n");
+    }
+
+    // OLED display update
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print("HR: ");
+    if (reportedBPM > 0.1)
+      display.print(String(reportedBPM, 1));
+    else
+      display.print("--");
+    display.println(" BPM");
+
+    display.print("Motion: ");
+    display.println(motionFlag ? "YES" : "NO");
+
+    display.print("Stress: ");
+    display.println(stressDetected ? "YES" : "NO");
+
+    display.drawRect(0, 40, 128, 20, SSD1306_WHITE);
+    display.setCursor(4, 44);
+    if (stressDetected)
+      display.println("!! PLAY CALMING AUDIO !!");
+    else
+      display.println("Status: Stable");
+    display.display();
+  }
+
+  delay(25); // ~40Hz sampling
+}
