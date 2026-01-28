@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroTune - User Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/user_dashboard.js') }}"></script>
+
+</head>
+<body>
+    <div class="top-bar">
+        <div class="user-name" id="user-name"></div>
+        <div class="status">
+            <span id="connection-status">Connected</span>
+            <span id="battery">Battery: 85%</span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li id="tab-dashboard" class="active">Dashboard</li>
+                <li id="tab-user-details">User Details</li>
+                <li id="tab-type-it-out">Type It Out</li>
+                <li id="tab-know-more">Know More</li>
+                <li id="tab-helpline">Helpline</li>
+                <li id="tab-customize">Customize</li>
+                <li id="tab-logout">Logout</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div id="dashboard-view" class="view active">
+                <div class="graphs-row">
+                    <div class="graph-container small">
+                        <canvas id="heartRateChart"></canvas>
+                    </div>
+                    <div class="graph-container small">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+                <div class="message-box">
+                    <p>Your recent data shows consistent regulation with expected variations.</p>
+                </div>
+                <div class="graphs-row">
+                    <div class="graph-container small">
+                        <canvas id="temperatureChart"></canvas>
+                    </div>
+                </div>
+                <div class="music-section">
+                    <div class="music-left">
+                        <h3>Available Sounds</h3>
+                        <div class="sound-list">
+                            <div class="sound-item" data-sound="white-noise" data-title="White Noise">
+                                <span class="sound-title">White Noise</span>
+                            </div>
+                            <div class="sound-item" data-sound="pink-noise" data-title="Pink Noise">
+                                <span class="sound-title">Pink Noise</span>
+                            </div>
+                            <div class="sound-item" data-sound="green-noise" data-title="Green Noise">
+                                <span class="sound-title">Green Noise</span>
+                            </div>
+                            <div class="sound-item" data-sound="brown-noise" data-title="Brown Noise">
+                                <span class="sound-title">Brown Noise</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="music-right">
+                        <h3>Now Playing</h3>
+                        <div id="now-playing" class="now-playing" style="display: none;">
+                            <div class="pulse-circle">
+                                <div class="pulse-wave"></div>
+                            </div>
+                            <span id="now-playing-title"></span>
+                        </div>
+                        <div class="intensity-control">
+                            <label for="intensity-slider">Intensity:</label>
+                            <input type="range" id="intensity-slider" min="1" max="10" value="5">
+                        </div>
+                        <div id="last-played">
+                            <h4>Last Played</h4>
+                            <span id="last-played-title">None</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="user-details-view" class="view">
+                <div class="centered-container">
+                    <h2>User Details</h2>
+                    <div class="details-card">
+                        <div class="detail-row">
+                            <span class="label">Name:</span>
+                            <span class="value" id="details-name"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Total Days Active:</span>
+                            <span class="value">30</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Sessions Completed:</span>
+                            <span class="value">45</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Overall Engagement Level:</span>
+                            <span class="value">Moderate</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Usage Summary:</span>
+                            <span class="value">Regular check-ins with steady progress in mental state tracking.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="type-it-out-view" class="view">
+                <h2 class="centered-heading">Share your thoughts</h2>
+                <textarea id="text-input" placeholder="Share your thoughts..."></textarea>
+                <button id="voice-input">Voice Input</button>
+                <button id="submit-text">Submit</button>
+            </div>
+            <div id="know-more-view" class="view">
+                <h2>Know More</h2>
+                <div class="data-row">
+                    <div class="data-card small">
+                        <h3>Heart Rate Trends</h3>
+                        <table>
+                            <tr><th>Time</th><th>Rate (bpm)</th></tr>
+                            <tr><td>08:00-10:00</td><td>72</td></tr>
+                            <tr><td>10:00-12:00</td><td>68</td></tr>
+                            <tr><td>12:00-14:00</td><td>75</td></tr>
+                            <tr><td>14:00-16:00</td><td>70</td></tr>
+                            <tr><td>16:00-18:00</td><td>73</td></tr>
+                        </table>
+                    </div>
+                    <div class="data-card small">
+                        <h3>Stress Index</h3>
+                        <table>
+                            <tr><th>Time</th><th>Index</th></tr>
+                            <tr><td>08:00-10:00</td><td>3.2</td></tr>
+                            <tr><td>10:00-12:00</td><td>2.8</td></tr>
+                            <tr><td>12:00-14:00</td><td>3.5</td></tr>
+                            <tr><td>14:00-16:00</td><td>3.0</td></tr>
+                            <tr><td>16:00-18:00</td><td>3.1</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="data-row">
+                    <div class="data-card small">
+                        <h3>Daily Averages</h3>
+                        <p>Heart Rate: 71 bpm</p>
+                        <p>Stress Index: 3.1</p>
+                        <p>Calm Index: 7.5/10</p>
+                    </div>
+                    <div class="data-card small">
+                        <h3>Weekly Summary</h3>
+                        <p>Average Heart Rate: 72 bpm</p>
+                        <p>Average Stress Index: 3.2</p>
+                        <p>Improvement: +5%</p>
+                    </div>
+                </div>
+            </div>
+            <div id="helpline-view" class="view">
+                <div class="helpline-center">
+                    <h2>Helpline</h2>
+                    <div class="contact-section">
+                        <h3>Old Age Home Support</h3>
+                        <p>Call: <a href="tel:1800123456">1800-123-456</a></p>
+                    </div>
+                    <div class="contact-section">
+                        <h3>Professional Mental Health Support</h3>
+                        <p>Call: <a href="tel:1800987654">1800-987-654</a></p>
+                    </div>
+                    <div class="contact-section">
+                        <h3>Emergency Contact</h3>
+                        <p>Call: <a href="tel:1800555123">1800-555-123</a></p>
+                    </div>
+                </div>
+            </div>
+            <div id="customize-view" class="view">
+                <div class="centered-container">
+                    <h2>Customize</h2>
+                    <div class="upload-card">
+                        <p>Upload an MP3 file to add a custom relaxation sound.</p>
+                        <input type="file" id="file-upload" accept=".mp3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p>Thank you. This helps us understand you better.</p>
+            <button id="close-modal">OK</button>
+        </div>
+    </div>
+    <audio id="audio-player" preload="none"></audio>
+    <script type="module" src="js/user_dashboard.js"></script>
+</body>
+</html>

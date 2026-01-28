@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroTune - User Sign Up</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4a90e2;
+        }
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+        .password-container {
+            position: relative;
+        }
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 20px;
+            height: 10px;
+            border: 2px solid #666;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+        }
+        .eye-icon::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background-color: #666;
+            border-radius: 50%;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="NeuroTune Logo" class="logo">
+        <h1>NeuroTune</h1>
+        <h2>User Sign Up</h2>
+
+        <form id="signupForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="phone" placeholder="Phone number (optional)">
+            <input type="date" id="dob" required>
+
+            <div class="password-container">
+                <input type="password" id="password" placeholder="New Password" required>
+                <span id="togglePassword" class="eye-icon"></span>
+            </div>
+
+            <div class="password-container">
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                <span id="toggleConfirmPassword" class="eye-icon"></span>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Firebase Signup Logic -->
+    <script type="module">
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { auth, db } from "{{ url_for('static', filename='js/firebase.js') }}";
+
+        document.getElementById("togglePassword").onclick = () => {
+            const p = document.getElementById("password");
+            p.type = p.type === "password" ? "text" : "password";
+        };
+
+        document.getElementById("toggleConfirmPassword").onclick = () => {
+            const p = document.getElementById("confirmPassword");
+            p.type = p.type === "password" ? "text" : "password";
+        };
+
+        document.getElementById("signupForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const dob = document.getElementById("dob").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (!username || !email || !dob || !password || !confirmPassword) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return;
+            }
+
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+                await setDoc(doc(db, "users", cred.user.uid), {
+                    username,
+                    email,
+                    phone: phone || null,
+                    dob,
+                    role: "user",
+                    createdAt: new Date()
+                });
+
+                alert("Signup successful. Please login.");
+                window.location.href = "/";   // ✅ CORRECT REDIRECT
+
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+    </script>
+</body>
+</html>
