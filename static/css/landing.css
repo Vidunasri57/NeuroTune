@@ -1,0 +1,142 @@
+/* ================= GLOBAL ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(245, 247, 250, 0.96);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    border-bottom: 1px solid #c3cfe2;
+    z-index: 1000; /* 🔑 ensures navbar is always clickable */
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4a90e2;
+}
+
+.nav-btn {
+    text-decoration: none;
+    padding: 8px 18px;
+    background-color: #4a90e2;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #357abd;
+}
+
+/* ================= HERO ================= */
+.hero {
+    height: 100vh;
+    background-image: url("../images/hero-logo.png");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none; /* 🔑 prevents hero from blocking navbar clicks */
+}
+
+.hero-overlay {
+    background: rgba(0, 0, 0, 0.45);
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    color: #ffffff;
+    max-width: 700px;
+
+    pointer-events: auto; /* 🔑 allows text interaction if needed */
+}
+
+.hero-title {
+    font-size: 56px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* ================= ABOUT ================= */
+.about {
+    padding: 90px 20px;
+    background-color: #f5f7fa;
+}
+
+.about-container {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.about-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.about-card h2 {
+    color: #4a90e2;
+    margin-bottom: 15px;
+}
+
+.about-card p {
+    line-height: 1.7;
+    color: #555;
+}
+
+/* ================= CONTACT ================= */
+.contact {
+    background-color: #e0e6ed;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.contact h2 {
+    color: #4a90e2;
+    margin-bottom: 10px;
+}
+
+.contact a {
+    color: #357abd;
+    text-decoration: none;
+}
+
+.contact a:hover {
+    text-decoration: underline;
+}
+
+.footer-note {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #666;
+}

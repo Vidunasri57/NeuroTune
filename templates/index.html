@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NeuroTune | Mental Wellness Through Sound</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Landing Page CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="navbar">
+        <div class="nav-left">
+            <span class="logo-text">NeuroTune</span>
+        </div>
+        <div class="nav-right">
+            <a href="{{ url_for('login') }}" class="nav-btn">Login / Sign Up</a>
+        </div>
+    </header>
+
+    <!-- ================= HERO SECTION ================= -->
+    <section class="hero">
+        <div class="hero-overlay">
+            <h1 class="hero-title">NeuroTune</h1>
+            <p class="hero-subtitle">
+                Using sound therapy and data-driven insights to support mental well-being
+            </p>
+        </div>
+    </section>
+
+    <!-- ================= ABOUT SECTION ================= -->
+    <section class="about">
+        <div class="about-container">
+
+            <div class="about-card">
+                <h2>Who Are We</h2>
+                <p>
+                    <strong>Nexus</strong> is a collaborative team dedicated to preserving and
+                    prioritising mental health through thoughtful and responsible use of technology.
+                    We aim to create supportive digital spaces that promote emotional balance,
+                    awareness, and long-term well-being.
+                </p>
+            </div>
+
+            <div class="about-card">
+                <h2>Why We Built NeuroTune</h2>
+                <p>
+                    In the modern world, mental health challenges such as stress, anxiety, burnout,
+                    and emotional fatigue are becoming increasingly common due to fast-paced lifestyles,
+                    academic pressure, work demands, and constant digital exposure.
+                </p>
+                <p>
+                    NeuroTune was built to offer a calm, non-invasive solution that combines sound-based
+                    therapy with physiological insights to help users regulate stress and regain mental
+                    balance in a simple and accessible way.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= CONTACT SECTION ================= -->
+    <footer class="contact">
+        <h2>Contact Us</h2>
+        <p>Email:
+            <a href="mailto:neurotune.support@gmail.com">
+                neurotune.support@gmail.com
+            </a>
+        </p>
+        <p>Phone:
+            <a href="tel:9343762671">
+                +91 93437 62671
+            </a>
+        </p>
+        <p class="footer-note">
+            © 2026 NeuroTune | Built with care for mental well-being
+        </p>
+    </footer>
+
+</body>
+</html>
